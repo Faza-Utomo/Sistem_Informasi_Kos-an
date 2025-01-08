@@ -5,13 +5,13 @@ import java.awt.*;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
 
-public class Kamar {
+public class Pegawai {
     public static Connection con;
     public static Statement stm;
 
     public static void main(String args[]) {
         // Membuat frame utama
-        JFrame frame = new JFrame("Home Aplikasi Kosan");
+        JFrame frame = new JFrame("Halaman Admin Aplikasi Kosan");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
@@ -21,7 +21,7 @@ public class Kamar {
         panel.setLayout(new BorderLayout());
 
         // Membuat model tabel
-        String[] columnNames = {"ID Kamar", "No. Kamar", "Harga", "Jenis Kamar", "Ketersediaan"};
+        String[] columnNames = {"ID Pegawai", "Nama Pegawai", "No. Handphone", "Email"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
 
@@ -35,18 +35,17 @@ public class Kamar {
             //System.out.println("koneksi berhasil;");
 
             // Query untuk mendapatkan data kamar
-            String query = "SELECT * FROM kamar";
+            String query = "SELECT * FROM pegawai";
             // Mengisi tabel dengan data dari database
             try (ResultSet resultSet = stm.executeQuery(query)) {
                 // Mengisi tabel dengan data dari database
                 while (resultSet.next()) {
-                    int idKamar = resultSet.getInt("idKamar");
-                    String noKamar = resultSet.getString("noKamar");
-                    int harga = resultSet.getInt("harga");
-                    String jenisKamar = resultSet.getString("jenisKamar");
-                    String ketersediaan = resultSet.getString("ketersediaan");
+                    int idKamar = resultSet.getInt("IdPegawai");
+                    String noKamar = resultSet.getString("nama");
+                    String harga = resultSet.getString("noHp");
+                    String jenisKamar = resultSet.getString("Email");
                     
-                    Object[] row = {idKamar, noKamar, harga, jenisKamar, ketersediaan};
+                    Object[] row = {idKamar, noKamar, harga, jenisKamar};
                     tableModel.addRow(row);
                 }
                 // Menutup koneksi
