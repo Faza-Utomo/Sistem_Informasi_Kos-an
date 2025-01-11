@@ -3,14 +3,10 @@ package admin;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class inputKamar extends JFrame {
-    private JFrame parentFrame;
-
     public inputKamar(JFrame parentFrame) {
-        this.parentFrame = parentFrame;
 
         // Konfigurasi frame untuk halaman input data kamar
         setTitle("Form Input Data Kamar");
@@ -43,47 +39,43 @@ public class inputKamar extends JFrame {
 
         // Tombol Simpan
         JButton btnSimpan = new JButton("Simpan");
-        btnSimpan.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Validasi input sebelum menyimpan
-                if (txtIdKamar.getText().isEmpty() || txtNoKamar.getText().isEmpty() ||
+        btnSimpan.addActionListener((ActionEvent e) -> {
+            // Validasi input sebelum menyimpan
+            if (txtIdKamar.getText().isEmpty() || txtNoKamar.getText().isEmpty() ||
                     txtHarga.getText().isEmpty() || txtJenisKamar.getText().isEmpty() ||
                     txtKetersediaan.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-
-                try {
-                    int idKamar = Integer.parseInt(txtIdKamar.getText());
-                    int harga = Integer.parseInt(txtHarga.getText());
-
-                    String url = "jdbc:mysql://localhost/sikosan_db";
-                    String user = "root";
-                    String pass = "";
-                    Connection con = DriverManager.getConnection(url, user, pass);
-
+                JOptionPane.showMessageDialog(null, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            try {
+                int idKamar = Integer.parseInt(txtIdKamar.getText());
+                int harga = Integer.parseInt(txtHarga.getText());
+                
+                String url = "jdbc:mysql://localhost/sikosan_db";
+                String user = "root";
+                String pass = "";
+                try (Connection con = DriverManager.getConnection(url, user, pass)) {
                     String query = "INSERT INTO kamar (idKamar, noKamar, harga, jenisKamar, ketersediaan) VALUES (?, ?, ?, ?, ?)";
-                    PreparedStatement pst = con.prepareStatement(query);
-                    pst.setInt(1, idKamar);
-                    pst.setString(2, txtNoKamar.getText());
-                    pst.setInt(3, harga);
-                    pst.setString(4, txtJenisKamar.getText());
-                    pst.setString(5, txtKetersediaan.getText());
-                    pst.executeUpdate();
-
-                    JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
-                    pst.close();
-                    con.close();
-
-                    dispose(); // Menutup frame input
-                    new Kamar().main(null); // Membuka halaman Kamar
-
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "ID Kamar dan Harga harus berupa angka!", "Kesalahan", JOptionPane.ERROR_MESSAGE);
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, "Gagal menyimpan data: " + ex.getMessage(), "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                    try (PreparedStatement pst = con.prepareStatement(query)) {
+                        pst.setInt(1, idKamar);
+                        pst.setString(2, txtNoKamar.getText());
+                        pst.setInt(3, harga);
+                        pst.setString(4, txtJenisKamar.getText());
+                        pst.setString(5, txtKetersediaan.getText());
+                        pst.executeUpdate();
+                        
+                        JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
+                    }
                 }
+                
+                dispose(); // Menutup frame input
+                Kamar.main(null); // Membuka halaman Kamar
+                
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "ID Kamar dan Harga harus berupa angka!", "Kesalahan", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Gagal menyimpan data: " + ex.getMessage(), "Kesalahan", JOptionPane.ERROR_MESSAGE);
             }
         });
 
