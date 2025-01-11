@@ -5,7 +5,7 @@ import java.awt.*;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
 
-public class Reservasi {
+public class Pembayaran {
     public static Connection con;
     public static Statement stm;
 
@@ -21,7 +21,7 @@ public class Reservasi {
         panel.setLayout(new BorderLayout());
 
         // Membuat model tabel
-        String[] columnNames = {"ID Reservasi", "ID Penghuni", "ID Kamar", "Lama Sewa", "Satuan Sewa"};
+        String[] columnNames = {"ID Pembayaran", "ID Reservasi", "Tanggal Pembayaran", "Metode Pembayaran", "Total Harga"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
 
@@ -35,19 +35,18 @@ public class Reservasi {
             //System.out.println("koneksi berhasil;");
 
             // Query untuk mendapatkan data kamar
-            String query = "SELECT * FROM reservasi";
+            String query = "SELECT * FROM pembayaran";
             // Mengisi tabel dengan data dari database
             try (ResultSet resultSet = stm.executeQuery(query)) {
                 // Mengisi tabel dengan data dari database
                 while (resultSet.next()) {
-                    int idReservasi = resultSet.getInt("IdReservasi");
-                    int IdPenghuni = resultSet.getInt("IdPenghuni");
-                    int IdKamar = resultSet.getInt("IdKamar");
-                    String lama_sewa = resultSet.getString("lama_sewa");
-                    String satuan_sewa = resultSet.getString("satuan_sewa");
+                    int idReservasi = resultSet.getInt("IdPembayaran");
+                    int IdPenghuni = resultSet.getInt("IdReservasi");
+                    String IdKamar = resultSet.getString("tglPembayaran");
+                    String metode = resultSet.getString("metodePembayaran");
 
                     
-                    Object[] row = {idReservasi, IdPenghuni, IdKamar, lama_sewa, satuan_sewa};
+                    Object[] row = {idReservasi, IdPenghuni, IdKamar, metode};
                     tableModel.addRow(row);
                 }
                 // Menutup koneksi
