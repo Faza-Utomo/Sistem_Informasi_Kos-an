@@ -5,7 +5,7 @@ import java.awt.*;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
 
-public class Penghuni {
+public class Reservasi {
     public static Connection con;
     public static Statement stm;
 
@@ -21,7 +21,7 @@ public class Penghuni {
         panel.setLayout(new BorderLayout());
 
         // Membuat model tabel
-        String[] columnNames = {"ID Penghuni", "Nama Penghuni", "No. Handphone", "Email"};
+        String[] columnNames = {"ID Reservasi", "ID Penghuni", "ID Kamar", "Check In", "Check Out"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
 
@@ -35,17 +35,19 @@ public class Penghuni {
             //System.out.println("koneksi berhasil;");
 
             // Query untuk mendapatkan data kamar
-            String query = "SELECT * FROM penghuni";
+            String query = "SELECT * FROM Reservasi";
             // Mengisi tabel dengan data dari database
             try (ResultSet resultSet = stm.executeQuery(query)) {
                 // Mengisi tabel dengan data dari database
                 while (resultSet.next()) {
-                    int idPenghuni = resultSet.getInt("IdPenghuni");
-                    String nama = resultSet.getString("nama");
-                    String noHp = resultSet.getString("noHp");
-                    String email = resultSet.getString("Email");
+                    int idReservasi = resultSet.getInt("IdReservasi");
+                    int IdPenghuni = resultSet.getInt("IdPenghuni");
+                    int IdKamar = resultSet.getInt("IdKamar");
+                    String tglMulai = resultSet.getString("tglMulai");
+                    String tglSelesai = resultSet.getString("tglSelesai");
+
                     
-                    Object[] row = {idPenghuni, nama, noHp, email};
+                    Object[] row = {idReservasi, IdPenghuni, IdKamar, tglMulai, tglSelesai};
                     tableModel.addRow(row);
                 }
                 // Menutup koneksi
