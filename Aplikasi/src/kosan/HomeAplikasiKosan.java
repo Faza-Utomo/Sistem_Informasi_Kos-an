@@ -36,8 +36,7 @@ public class HomeAplikasiKosan {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose(); // Menutup frame saat ini
-                ListKamar listKamar = new ListKamar(); // Membuka halaman ListKamar
-                listKamar.setVisible(true);
+                ListKamar.main(null); // Membuka halaman ListKamar
             }
         });
 
