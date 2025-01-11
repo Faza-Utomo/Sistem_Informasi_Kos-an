@@ -2,10 +2,13 @@ package admin;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
 
 public class Kamar {
+
     public static Connection con;
     public static Statement stm;
 
@@ -32,11 +35,9 @@ public class Kamar {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(url, user, pass);
             stm = con.createStatement();
-            //System.out.println("koneksi berhasil;");
 
             // Query untuk mendapatkan data kamar
             String query = "SELECT * FROM kamar";
-            // Mengisi tabel dengan data dari database
             try (ResultSet resultSet = stm.executeQuery(query)) {
                 // Mengisi tabel dengan data dari database
                 while (resultSet.next()) {
@@ -45,11 +46,10 @@ public class Kamar {
                     int harga = resultSet.getInt("harga");
                     String jenisKamar = resultSet.getString("jenisKamar");
                     String ketersediaan = resultSet.getString("ketersediaan");
-                    
+
                     Object[] row = {idKamar, noKamar, harga, jenisKamar, ketersediaan};
                     tableModel.addRow(row);
                 }
-                // Menutup koneksi
             }
             stm.close();
             con.close();
@@ -62,8 +62,28 @@ public class Kamar {
         JScrollPane scrollPane = new JScrollPane(table);
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        // Tambahkan panel ke frame
+        // Panel bawah untuk tombol
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        // Tombol Tambah Data
+        JButton btnTambahData = new JButton("Tambah Data");
+        btnTambahData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Membuka halaman baru (inputKamar)
+                inputKamar inputFrame = new inputKamar(frame); // Pass current frame
+                inputFrame.setVisible(true);
+                frame.dispose(); // Menutup frame utama
+            }
+        });
+
+        // Menambahkan tombol ke panel bawah
+        bottomPanel.add(btnTambahData);
+
+        // Menambahkan panel bawah ke frame
         frame.add(panel, BorderLayout.CENTER);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
 
         // Atur frame agar terlihat di tengah layar
         frame.setLocationRelativeTo(null);
