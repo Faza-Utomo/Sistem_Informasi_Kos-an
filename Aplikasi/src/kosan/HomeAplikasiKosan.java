@@ -16,42 +16,51 @@ public class HomeAplikasiKosan {
         // Panel untuk konten utama
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
 
         // Label judul
         JLabel titleLabel = new JLabel("Selamat Datang di Aplikasi Kosan");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         // Tambahkan label ke atas frame
         frame.add(titleLabel, BorderLayout.NORTH);
 
-        // Tombol Sewa Kamar
-        JButton sewabtn = new JButton("Sewa Kamar");
-        sewabtn.setFont(new Font("Arial", Font.PLAIN, 14));
+        // Tombol Lihat Kamar
+        JButton lihatKamarBtn = new JButton("List Kamar");
+        lihatKamarBtn.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        // Menambahkan action listener untuk tombol
-        sewabtn.addActionListener(new ActionListener() {
+        // Menambahkan action listener untuk tombol Lihat Kamar
+        lihatKamarBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Menutup frame saat ini
+                ListKamar listKamar = new ListKamar(); // Membuka halaman ListKamar
+                listKamar.setVisible(true);
+            }
+        });
+
+        // Tombol Sewa Kamar
+        JButton sewaKamarBtn = new JButton("Sewa Kamar");
+        sewaKamarBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        // Menambahkan action listener untuk tombol Sewa Kamar
+        sewaKamarBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Menu Sewa Kamar belum tersedia.", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
-        // List Kamar
-        DefaultListModel<String> roomListModel = new DefaultListModel<>();
-        roomListModel.addElement("Kamar 1 - Rp 500.000/bulan");
-        roomListModel.addElement("Kamar 2 - Rp 600.000/bulan");
-        roomListModel.addElement("Kamar 3 - Rp 700.000/bulan");
-        
+        // Menambahkan tombol ke panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(lihatKamarBtn, gbc);
 
-        JList<String> roomList = new JList<>(roomListModel);
-        roomList.setFont(new Font("Arial", Font.PLAIN, 14));
-        JScrollPane scrollPane = new JScrollPane(roomList);
-        scrollPane.setPreferredSize(new Dimension(300, 150));
-
-        // Menambahkan tombol dan list ke panel
-        panel.add(sewabtn);
-        panel.add(scrollPane);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(sewaKamarBtn, gbc);
 
         // Tambahkan panel ke tengah frame
         frame.add(panel, BorderLayout.CENTER);
@@ -63,4 +72,3 @@ public class HomeAplikasiKosan {
         frame.setVisible(true);
     }
 }
-
