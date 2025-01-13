@@ -79,7 +79,7 @@ public class HalamanLogin {
         gbc.gridy = 2;
         panel.add(loginButton, gbc);
 
-        // Menambahkan Action Listener pada tombol login
+        // Pada Action Listener tombol login
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -89,6 +89,10 @@ public class HalamanLogin {
                 if (email.endsWith("@gmail.com") && !password.isEmpty()) {
                     if (authenticateUser(email, password)) {
                         JOptionPane.showMessageDialog(frame, "Login Berhasil!", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+
+                        // Pindah ke halaman HomeAplikasiKosan dengan parameter login berhasil
+                        frame.dispose(); // Tutup halaman login
+                        HomeAplikasiKosan.main(new String[]{"authenticated"}); // Kirim flag "authenticated"
                     } else {
                         JOptionPane.showMessageDialog(frame, "Gmail atau Password salah.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -97,6 +101,7 @@ public class HalamanLogin {
                 }
             }
         });
+
 
         // Menambah panel pada tengah Frame
         frame.add(panel, BorderLayout.CENTER);
