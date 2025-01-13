@@ -4,8 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 
 public class HalamanLogin {
+
+    // Variabel untuk koneksi database
+    private static final String URL = "jdbc:mysql://localhost:3306/sikosan_db";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
 
     public static void main(String[] args) {
         // Membuat frame utama
@@ -13,13 +19,13 @@ public class HalamanLogin {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
-        
+
         // Panel untuk konten utama
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        
+
         // Membuat label untuk bagian Input Gmail
         JLabel gmailLabel = new JLabel("Gmail:");
         gbc.gridx = 0;
@@ -38,7 +44,7 @@ public class HalamanLogin {
         gbc.gridx = 0;
         gbc.gridy = 1;
         panel.add(passwordLabel, gbc);
-        
+
         // Membuat text field untuk menginputkan Password
         JPasswordField passwordField = new JPasswordField(20);
         gbc.gridx = 1;
@@ -47,7 +53,7 @@ public class HalamanLogin {
 
         // Tombol untuk Tampilkan/Sembunyikan Password
         JButton showHideButton = new JButton("Tampilkan");
-        gbc.gridx = 2; 
+        gbc.gridx = 2;
         panel.add(showHideButton, gbc);
 
         // Menambahkan action listener untuk tombol "Tampilan/Sembunyikan Password"
@@ -73,9 +79,6 @@ public class HalamanLogin {
         gbc.gridy = 2;
         panel.add(loginButton, gbc);
 
-        // Menambah panel pada tengah Frame
-        frame.add(panel, BorderLayout.CENTER);
-
         // Menambahkan Action Listener pada tombol login
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -84,17 +87,65 @@ public class HalamanLogin {
                 String password = new String(passwordField.getPassword());
 
                 if (email.endsWith("@gmail.com") && !password.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "Login Berhasil!", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                    if (authenticateUser(email, password)) {
+                        JOptionPane.showMessageDialog(frame, "Login Berhasil!", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Gmail atau Password salah.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Gmail atau Password salah.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Format Gmail atau Password salah.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+
+        // Menambah panel pada tengah Frame
+        frame.add(panel, BorderLayout.CENTER);
 
         // Membuat Frame utama agar berada di tengah layar
         frame.setLocationRelativeTo(null);
 
         // Menampilkan Frame
         frame.setVisible(true);
+    }
+
+    // Method untuk menghubungkan ke database dan memverifikasi pengguna
+    private static boolean authenticateUser(String email, String password) {
+        boolean isAuthenticated = false;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            // Membuat koneksi ke database
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+
+            // Query untuk memeriksa email dan password di tabel penghuni
+            String query = "SELECT * FROM penghuni WHERE email = ? AND password = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            statement.setString(2, password);
+
+            resultSet = statement.executeQuery();
+
+            // Jika ditemukan hasil, berarti login berhasil
+            if (resultSet.next()) {
+                isAuthenticated = true;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Terjadi kesalahan pada koneksi database.", "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // Menutup koneksi dan statement
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return isAuthenticated;
     }
 }
