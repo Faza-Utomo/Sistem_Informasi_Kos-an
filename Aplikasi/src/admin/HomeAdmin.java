@@ -92,6 +92,16 @@ public class HomeAdmin extends JFrame {
     }
 
     public static void main(String[] args) {
+        
+        boolean isAuthenticated = args.length > 0 && args[0].equals("authenticated");
+
+        // Jika belum login, kembali ke halaman login
+        if (!isAuthenticated) {
+            JOptionPane.showMessageDialog(null, "Silakan login terlebih dahulu.", "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+            LoginAdmin.main(null); // Kembali ke halaman login
+            return; // Keluar dari method ini
+        }
+        
         // Menjalankan halaman HomeAdmin
         SwingUtilities.invokeLater(() -> {
             HomeAdmin homeAdmin = new HomeAdmin();

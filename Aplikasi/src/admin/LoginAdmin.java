@@ -1,4 +1,4 @@
-package kosan;
+package admin;
 
 import admin.HomeAdmin;
 import javax.swing.*;

@@ -10,6 +10,16 @@ public class Pembayaran {
     public static Statement stm;
 
     public static void main(String args[]) {
+        
+        boolean isAuthenticated = args.length > 0 && args[0].equals("authenticated");
+
+        // Jika belum login, kembali ke halaman login
+        if (!isAuthenticated) {
+            JOptionPane.showMessageDialog(null, "Silakan login terlebih dahulu.", "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+            LoginAdmin.main(null); // Kembali ke halaman login
+            return; // Keluar dari method ini
+        }
+        
         // Membuat frame utama
         JFrame frame = new JFrame("Halaman Admin Aplikasi Kosan");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
