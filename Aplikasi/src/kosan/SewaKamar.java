@@ -3,14 +3,22 @@ package kosan;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class SewaKamar {
+public class SewaKamar {    
     public static Connection con;
     public static Statement stm;
 
     public static void main(String[] args) {
+        boolean isAuthenticated = args.length > 0 && args[0].equals("authenticated");
+
+        // Jika belum login, kembali ke halaman login
+        if (!isAuthenticated) {
+            JOptionPane.showMessageDialog(null, "Silakan login terlebih dahulu.", "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+            HalamanLogin.main(null); // Kembali ke halaman login
+            return; // Keluar dari method ini
+        }
+        
         JFrame frame = new JFrame("Sewa Kamar");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
@@ -69,13 +77,11 @@ public class SewaKamar {
             con = DriverManager.getConnection(url, user, pass);
             stm = con.createStatement();
 
-            String query = "SELECT noKamar, jenisKamar, harga FROM kamar";
+            String query = "SELECT idKamar FROM kamar";
             try (ResultSet resultSet = stm.executeQuery(query)) {
                 while (resultSet.next()) {
-                    String noKamar = resultSet.getString("noKamar");
-                    String jenisKamar = resultSet.getString("jenisKamar");
-                    String harga = resultSet.getString("harga");
-                    kamarComboBox.addItem("No. " + noKamar + " --- Jenis: " + jenisKamar + " --- Rp. " + harga);
+                    String idKamar = resultSet.getString("idKamar");
+                    kamarComboBox.addItem(" " + idKamar);
                 }
             }
             stm.close();
