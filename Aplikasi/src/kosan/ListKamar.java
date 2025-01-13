@@ -9,9 +9,19 @@ public class ListKamar {
     public static Connection con;
     public static Statement stm;
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
+        // Memeriksa apakah pengguna sudah login
+        boolean isAuthenticated = args.length > 0 && args[0].equals("authenticated");
+
+        // Jika belum login, kembali ke halaman login
+        if (!isAuthenticated) {
+            JOptionPane.showMessageDialog(null, "Silakan login terlebih dahulu.", "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+            HalamanLogin.main(null); // Kembali ke halaman login
+            return; // Keluar dari method ini
+        }
+
         // Membuat frame utama
-        JFrame frame = new JFrame("Aplikasi Kosan");
+        JFrame frame = new JFrame("List Kamar - Aplikasi Kosan");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
@@ -32,11 +42,9 @@ public class ListKamar {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(url, user, pass);
             stm = con.createStatement();
-            //System.out.println("koneksi berhasil;");
 
             // Query untuk mendapatkan data kamar
             String query = "SELECT * FROM kamar";
-            // Mengisi tabel dengan data dari database
             try (ResultSet resultSet = stm.executeQuery(query)) {
                 // Mengisi tabel dengan data dari database
                 while (resultSet.next()) {
@@ -45,12 +53,11 @@ public class ListKamar {
                     String harga = resultSet.getString("harga");
                     String ketersediaan = resultSet.getString("ketersediaan");
 
-                    
                     Object[] row = {noKamar, jenisKamar, harga, ketersediaan};
                     tableModel.addRow(row);
                 }
-                // Menutup koneksi
             }
+            // Menutup koneksi
             stm.close();
             con.close();
 
@@ -64,6 +71,24 @@ public class ListKamar {
 
         // Tambahkan panel ke frame
         frame.add(panel, BorderLayout.CENTER);
+
+        // Tombol Logout
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        // Action listener untuk Logout
+        logoutBtn.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                frame.dispose(); // Menutup frame saat ini
+                HalamanLogin.main(null); // Membuka halaman login
+            }
+        });
+
+        // Menambahkan tombol Logout di bawah
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(logoutBtn, BorderLayout.WEST);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
 
         // Atur frame agar terlihat di tengah layar
         frame.setLocationRelativeTo(null);
