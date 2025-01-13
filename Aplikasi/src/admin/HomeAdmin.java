@@ -44,65 +44,76 @@ public class HomeAdmin extends JFrame {
 
         // Menambahkan ActionListener untuk setiap tombol
         btnKamar.addActionListener((ActionEvent e) -> {
-            // Membuka halaman Kamar
             Kamar.main(new String[]{"authenticated"});
-            dispose(); // Menutup halaman home admin
+            dispose();
         });
 
         btnPegawai.addActionListener((ActionEvent e) -> {
-            // Membuka halaman Pegawai
-            Pegawai.main(new String[]{"authenticated"});  // Asumsi Pegawai memiliki method main()
-            dispose(); // Menutup halaman home admin
+            Pegawai.main(new String[]{"authenticated"});
+            dispose();
         });
 
         btnPenghuni.addActionListener((ActionEvent e) -> {
-            // Membuka halaman Penghuni
-            Penghuni.main(new String[]{"authenticated"});  // Asumsi Penghuni memiliki method main()
-            dispose(); // Menutup halaman home admin
+            Penghuni.main(new String[]{"authenticated"});
+            dispose();
         });
 
         btnReservasi.addActionListener((ActionEvent e) -> {
-            // Membuka halaman Reservasi
-            Reservasi.main(new String[]{"authenticated"});  // Asumsi Reservasi memiliki method main()
-            dispose(); // Menutup halaman home admin
+            Reservasi.main(new String[]{"authenticated"});
+            dispose();
         });
 
         btnPembayaran.addActionListener((ActionEvent e) -> {
-            // Membuka halaman Pembayaran
-            Pembayaran.main(new String[]{"authenticated"});  // Asumsi Pembayaran memiliki method main()
-            dispose(); // Menutup halaman home admin
+            Pembayaran.main(new String[]{"authenticated"});
+            dispose();
         });
 
         // Menambahkan tombol ke panel
         panel.add(btnKamar, gbc);
-        gbc.gridy++; // Pindah ke baris berikutnya
+        gbc.gridy++;
         panel.add(btnPegawai, gbc);
-        gbc.gridy++; // Pindah ke baris berikutnya
+        gbc.gridy++;
         panel.add(btnPenghuni, gbc);
-        gbc.gridy++; // Pindah ke baris berikutnya
+        gbc.gridy++;
         panel.add(btnReservasi, gbc);
-        gbc.gridy++; // Pindah ke baris berikutnya
+        gbc.gridy++;
         panel.add(btnPembayaran, gbc);
 
         // Menambahkan panel ke frame
-        add(panel, BorderLayout.CENTER);  // Menambahkan panel tombol ke bagian tengah
+        add(panel, BorderLayout.CENTER);
+
+        // Menambahkan tombol logout di kanan atas
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+        logoutBtn.setPreferredSize(new Dimension(100, 30)); // Menentukan ukuran tombol logout
+        // Menambahkan action listener untuk tombol Logout
+        logoutBtn.addActionListener((ActionEvent e) -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                dispose(); // Menutup frame saat ini
+                LoginAdmin.main(null); // Membuka halaman login
+            }
+        });
+
+        // Panel untuk menempatkan tombol logout di kanan atas
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(lblTitle, BorderLayout.CENTER); // Menambahkan judul di tengah
+        topPanel.add(logoutBtn, BorderLayout.EAST);  // Menambahkan tombol logout di kanan atas
+        add(topPanel, BorderLayout.NORTH); // Menambahkan topPanel ke bagian atas
 
         // Menampilkan frame di tengah layar
         setLocationRelativeTo(null);
     }
 
     public static void main(String[] args) {
-        
         boolean isAuthenticated = args.length > 0 && args[0].equals("authenticated");
 
-        // Jika belum login, kembali ke halaman login
         if (!isAuthenticated) {
             JOptionPane.showMessageDialog(null, "Silakan login terlebih dahulu.", "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
-            LoginAdmin.main(null); // Kembali ke halaman login
-            return; // Keluar dari method ini
+            LoginAdmin.main(null);
+            return;
         }
-        
-        // Menjalankan halaman HomeAdmin
+
         SwingUtilities.invokeLater(() -> {
             HomeAdmin homeAdmin = new HomeAdmin();
             homeAdmin.setVisible(true);

@@ -2,6 +2,8 @@ package admin;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,6 +32,26 @@ public class Pembayaran {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
+         // Panel atas untuk tombol kembali
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        // Tombol Kembali
+        JButton btnKembali = new JButton("Kembali");
+        btnKembali.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HomeAdmin.main(new String[]{"authenticated"}); // Kembali ke halaman utama admin
+                frame.dispose(); // Menutup frame utama
+            }
+        });
+
+        // Menambahkan tombol ke panel atas
+        topPanel.add(btnKembali);
+
+        // Menambahkan panel atas ke frame
+        frame.add(topPanel, BorderLayout.NORTH);  
+        
         // Membuat model tabel
         String[] columnNames = {"ID Pembayaran", "ID Reservasi", "Tanggal Pembayaran", "Metode Pembayaran", "Total Harga"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);

@@ -75,7 +75,32 @@ public class Kamar {
         // Panel bawah untuk tombol
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        
+        
+        // Panel atas untuk tombol kembali
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
+        // Tombol Kembali
+        JButton btnKembali = new JButton("Kembali");
+        btnKembali.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        // Membuka kembali halaman login
+        HomeAdmin.main(new String[]{"authenticated"}); // Kembali ke halaman login
+        frame.dispose(); // Menutup frame utama
+            }
+        });
+
+        // Menambahkan tombol ke panel atas
+        topPanel.add(btnKembali);
+
+        // Menambahkan panel atas ke frame
+        frame.add(topPanel, BorderLayout.NORTH);
+
+
+        
+        
         // Tombol Tambah Data
         JButton btnTambahData = new JButton("Tambah Data");
         btnTambahData.addActionListener(new ActionListener() {
