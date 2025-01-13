@@ -32,11 +32,13 @@ public class Reservasi {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-      // Panel atas untuk tombol kembali
+        // Panel atas untuk tombol kembali
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        topPanel.setLayout(new BorderLayout());
 
-        // Tombol Kembali
+        // Panel kiri untuk tombol Kembali
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         JButton btnKembali = new JButton("Kembali");
         btnKembali.addActionListener(new ActionListener() {
             @Override
@@ -45,13 +47,31 @@ public class Reservasi {
                 frame.dispose(); // Menutup frame utama
             }
         });
+        leftPanel.add(btnKembali); // Menambahkan tombol ke panel kiri
 
-        // Menambahkan tombol ke panel atas
-        topPanel.add(btnKembali);
+        // Panel kanan untuk tombol Logout
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnLogout = new JButton("Logout");
+        btnLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    frame.dispose(); // Menutup frame saat ini
+                    LoginAdmin.main(null); // Kembali ke halaman login
+                }
+            }
+        });
+        rightPanel.add(btnLogout); // Menambahkan tombol logout ke panel kanan
+
+        // Menambahkan panel kiri dan kanan ke panel atas
+        topPanel.add(leftPanel, BorderLayout.WEST);
+        topPanel.add(rightPanel, BorderLayout.EAST);
 
         // Menambahkan panel atas ke frame
-        frame.add(topPanel, BorderLayout.NORTH);     
-        
+        frame.add(topPanel, BorderLayout.NORTH);
+
         // Membuat model tabel
         String[] columnNames = {"ID Reservasi", "ID Penghuni", "ID Kamar", "Lama Sewa", "Satuan Sewa"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
@@ -64,13 +84,11 @@ public class Reservasi {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(url, user, pass);
             stm = con.createStatement();
-            //System.out.println("koneksi berhasil;");
 
-            // Query untuk mendapatkan data kamar
+            // Query untuk mendapatkan data reservasi
             String query = "SELECT * FROM reservasi";
             // Mengisi tabel dengan data dari database
             try (ResultSet resultSet = stm.executeQuery(query)) {
-                // Mengisi tabel dengan data dari database
                 while (resultSet.next()) {
                     int idReservasi = resultSet.getInt("IdReservasi");
                     int IdPenghuni = resultSet.getInt("IdPenghuni");
@@ -78,11 +96,9 @@ public class Reservasi {
                     String lama_sewa = resultSet.getString("lama_sewa");
                     String satuan_sewa = resultSet.getString("satuan_sewa");
 
-                    
                     Object[] row = {idReservasi, IdPenghuni, IdKamar, lama_sewa, satuan_sewa};
                     tableModel.addRow(row);
                 }
-                // Menutup koneksi
             }
             stm.close();
             con.close();

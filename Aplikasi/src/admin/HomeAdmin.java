@@ -17,7 +17,28 @@ public class HomeAdmin extends JFrame {
         JLabel lblTitle = new JLabel("Home Admin", JLabel.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));  // Memberikan margin atas dan bawah
-        add(lblTitle, BorderLayout.NORTH);  // Menambahkan label ke bagian utara
+
+        // Tombol logout di kanan atas
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.setFont(new Font("Arial", Font.PLAIN, 12));
+        logoutBtn.setPreferredSize(new Dimension(80, 30)); // Mengatur ukuran tombol logout
+
+        // Menambahkan action listener untuk tombol Logout
+        logoutBtn.addActionListener((ActionEvent e) -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                dispose(); // Menutup frame saat ini
+                LoginAdmin.main(null); // Membuka halaman login
+            }
+        });
+
+        // Panel untuk menempatkan tombol logout di kanan atas
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(lblTitle, BorderLayout.CENTER); // Menambahkan judul di tengah
+        topPanel.add(logoutBtn, BorderLayout.EAST);  // Menambahkan tombol logout di kanan atas
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Memberikan margin pada panel atas
+
+        add(topPanel, BorderLayout.NORTH); // Menambahkan topPanel ke bagian atas
 
         // Panel untuk menampung tombol-tombol
         JPanel panel = new JPanel();
@@ -81,25 +102,6 @@ public class HomeAdmin extends JFrame {
 
         // Menambahkan panel ke frame
         add(panel, BorderLayout.CENTER);
-
-        // Menambahkan tombol logout di kanan atas
-        JButton logoutBtn = new JButton("Logout");
-        logoutBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-        logoutBtn.setPreferredSize(new Dimension(100, 30)); // Menentukan ukuran tombol logout
-        // Menambahkan action listener untuk tombol Logout
-        logoutBtn.addActionListener((ActionEvent e) -> {
-            int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                dispose(); // Menutup frame saat ini
-                LoginAdmin.main(null); // Membuka halaman login
-            }
-        });
-
-        // Panel untuk menempatkan tombol logout di kanan atas
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(lblTitle, BorderLayout.CENTER); // Menambahkan judul di tengah
-        topPanel.add(logoutBtn, BorderLayout.EAST);  // Menambahkan tombol logout di kanan atas
-        add(topPanel, BorderLayout.NORTH); // Menambahkan topPanel ke bagian atas
 
         // Menampilkan frame di tengah layar
         setLocationRelativeTo(null);

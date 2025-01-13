@@ -13,7 +13,7 @@ public class Kamar {
     public static Statement stm;
 
     public static void main(String args[]) {
-        
+
         boolean isAuthenticated = args.length > 0 && args[0].equals("authenticated");
 
         // Jika belum login, kembali ke halaman login
@@ -22,7 +22,7 @@ public class Kamar {
             LoginAdmin.main(null); // Kembali ke halaman login
             return; // Keluar dari method ini
         }
-        
+
         // Membuat frame utama
         JFrame frame = new JFrame("Home Aplikasi Kosan");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,49 +75,57 @@ public class Kamar {
         // Panel bawah untuk tombol
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        
-        
+
         // Panel atas untuk tombol kembali
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JPanel topPanel = new JPanel(new BorderLayout());
 
         // Tombol Kembali
         JButton btnKembali = new JButton("Kembali");
         btnKembali.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        // Membuka kembali halaman login
-        HomeAdmin.main(new String[]{"authenticated"}); // Kembali ke halaman login
-        frame.dispose(); // Menutup frame utama
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HomeAdmin.main(new String[]{"authenticated"}); // Kembali ke halaman HomeAdmin
+                frame.dispose(); // Menutup frame utama
             }
         });
 
-        // Menambahkan tombol ke panel atas
-        topPanel.add(btnKembali);
+        // Tombol logout di kanan atas
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.setFont(new Font("Arial", Font.PLAIN, 12));
+        logoutBtn.setPreferredSize(new Dimension(80, 30)); // Mengatur ukuran tombol logout
 
-        // Menambahkan panel atas ke frame
-        frame.add(topPanel, BorderLayout.NORTH);
+        logoutBtn.addActionListener((ActionEvent e) -> {
+            int confirm = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                frame.dispose(); // Menutup frame saat ini
+                LoginAdmin.main(null); // Membuka halaman login
+            }
+        });
 
+        // Menambahkan tombol Kembali dan Logout ke panel atas
+        JPanel leftTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        leftTopPanel.add(btnKembali);
+        topPanel.add(leftTopPanel, BorderLayout.WEST);
+        topPanel.add(logoutBtn, BorderLayout.EAST);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        
-        
         // Tombol Tambah Data
         JButton btnTambahData = new JButton("Tambah Data");
         btnTambahData.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Membuka halaman baru (inputKamar)
                 inputKamar inputFrame = new inputKamar(frame); // Pass current frame
                 inputFrame.setVisible(true);
                 frame.dispose(); // Menutup frame utama
             }
         });
 
-        // Menambahkan tombol ke panel bawah
+        // Menambahkan tombol Tambah Data ke panel bawah
         bottomPanel.add(btnTambahData);
 
-        // Menambahkan panel bawah ke frame
+        // Menambahkan panel ke frame
         frame.add(panel, BorderLayout.CENTER);
+        frame.add(topPanel, BorderLayout.NORTH);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
         // Atur frame agar terlihat di tengah layar

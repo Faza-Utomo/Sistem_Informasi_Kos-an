@@ -27,9 +27,8 @@ public class Pegawai {
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
 
-        // Panel atas untuk tombol kembali
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        // Panel atas untuk tombol kembali dan logout
+        JPanel topPanel = new JPanel(new BorderLayout());
 
         // Tombol Kembali
         JButton btnKembali = new JButton("Kembali");
@@ -41,7 +40,31 @@ public class Pegawai {
                 frame.dispose(); // Menutup frame utama
             }
         });
-        topPanel.add(btnKembali);
+
+        // Tombol logout di kanan atas
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.setFont(new Font("Arial", Font.PLAIN, 12));
+        logoutBtn.setPreferredSize(new Dimension(80, 30)); // Mengatur ukuran tombol logout
+
+        logoutBtn.addActionListener((ActionEvent e) -> {
+            int confirm = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                frame.dispose(); // Menutup frame saat ini
+                LoginAdmin.main(null); // Membuka halaman login
+            }
+        });
+
+        // Menambahkan tombol Kembali dan Logout ke panel atas
+        JPanel leftTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        leftTopPanel.add(btnKembali);
+        topPanel.add(leftTopPanel, BorderLayout.WEST);
+        
+        // Panel kanan atas untuk tombol logout
+        JPanel rightTopPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        rightTopPanel.add(logoutBtn);
+        topPanel.add(rightTopPanel, BorderLayout.EAST);
+
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Menambahkan panel atas ke frame
         frame.add(topPanel, BorderLayout.NORTH);
@@ -95,3 +118,4 @@ public class Pegawai {
         frame.setVisible(true);
     }
 }
+

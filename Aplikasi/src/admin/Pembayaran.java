@@ -32,11 +32,13 @@ public class Pembayaran {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-         // Panel atas untuk tombol kembali
+        // Panel atas untuk tombol kembali
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        topPanel.setLayout(new BorderLayout());
 
-        // Tombol Kembali
+        // Panel kiri untuk tombol Kembali
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         JButton btnKembali = new JButton("Kembali");
         btnKembali.addActionListener(new ActionListener() {
             @Override
@@ -45,9 +47,27 @@ public class Pembayaran {
                 frame.dispose(); // Menutup frame utama
             }
         });
+        leftPanel.add(btnKembali); // Menambahkan tombol ke panel kiri
 
-        // Menambahkan tombol ke panel atas
-        topPanel.add(btnKembali);
+        // Panel kanan untuk tombol Logout
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnLogout = new JButton("Logout");
+        btnLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    frame.dispose(); // Menutup frame saat ini
+                    LoginAdmin.main(null); // Kembali ke halaman login
+                }
+            }
+        });
+        rightPanel.add(btnLogout); // Menambahkan tombol logout ke panel kanan
+
+        // Menambahkan panel kiri dan kanan ke panel atas
+        topPanel.add(leftPanel, BorderLayout.WEST);
+        topPanel.add(rightPanel, BorderLayout.EAST);
 
         // Menambahkan panel atas ke frame
         frame.add(topPanel, BorderLayout.NORTH);  
