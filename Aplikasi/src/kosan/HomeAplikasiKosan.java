@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 
 public class HomeAplikasiKosan {
 
-    // Tambahkan parameter untuk memeriksa status login
     public static void main(String[] args) {
         boolean isAuthenticated = args.length > 0 && args[0].equals("authenticated");
 
@@ -74,6 +73,30 @@ public class HomeAplikasiKosan {
 
         // Tambahkan panel ke tengah frame
         frame.add(panel, BorderLayout.CENTER);
+
+        // Tombol Logout
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+        logoutBtn.setHorizontalAlignment(SwingConstants.LEFT);
+
+        // Menambahkan action listener untuk tombol Logout
+        logoutBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    frame.dispose(); // Menutup frame saat ini
+                    HalamanLogin.main(null); // Membuka halaman login
+                }
+            }
+        });
+
+        // Panel untuk Logout di bawah kiri
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(logoutBtn, BorderLayout.WEST);
+
+        // Tambahkan panel bawah ke frame
+        frame.add(bottomPanel, BorderLayout.SOUTH);
 
         // Atur frame agar terlihat di tengah layar
         frame.setLocationRelativeTo(null);
