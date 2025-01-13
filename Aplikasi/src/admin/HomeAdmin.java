@@ -45,31 +45,31 @@ public class HomeAdmin extends JFrame {
         // Menambahkan ActionListener untuk setiap tombol
         btnKamar.addActionListener((ActionEvent e) -> {
             // Membuka halaman Kamar
-            Kamar.main(null);
+            Kamar.main(new String[]{"authenticated"});
             dispose(); // Menutup halaman home admin
         });
 
         btnPegawai.addActionListener((ActionEvent e) -> {
             // Membuka halaman Pegawai
-            Pegawai.main(null);  // Asumsi Pegawai memiliki method main()
+            Pegawai.main(new String[]{"authenticated"});  // Asumsi Pegawai memiliki method main()
             dispose(); // Menutup halaman home admin
         });
 
         btnPenghuni.addActionListener((ActionEvent e) -> {
             // Membuka halaman Penghuni
-            Penghuni.main(null);  // Asumsi Penghuni memiliki method main()
+            Penghuni.main(new String[]{"authenticated"});  // Asumsi Penghuni memiliki method main()
             dispose(); // Menutup halaman home admin
         });
 
         btnReservasi.addActionListener((ActionEvent e) -> {
             // Membuka halaman Reservasi
-            Reservasi.main(null);  // Asumsi Reservasi memiliki method main()
+            Reservasi.main(new String[]{"authenticated"});  // Asumsi Reservasi memiliki method main()
             dispose(); // Menutup halaman home admin
         });
 
         btnPembayaran.addActionListener((ActionEvent e) -> {
             // Membuka halaman Pembayaran
-            Pembayaran.main(null);  // Asumsi Pembayaran memiliki method main()
+            Pembayaran.main(new String[]{"authenticated"});  // Asumsi Pembayaran memiliki method main()
             dispose(); // Menutup halaman home admin
         });
 
