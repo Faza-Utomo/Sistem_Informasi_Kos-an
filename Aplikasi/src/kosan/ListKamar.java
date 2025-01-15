@@ -72,11 +72,21 @@ public class ListKamar {
         // Tambahkan panel ke frame
         frame.add(panel, BorderLayout.CENTER);
 
+        // Panel untuk tombol atas
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        // Tombol Kembali
+        JButton backBtn = new JButton("Kembali");
+        backBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+        backBtn.addActionListener(e -> {
+            frame.dispose(); // Menutup frame saat ini
+            HomeAplikasiKosan.main(new String[]{"authenticated"}); // Membuka halaman utama
+        });
+        topPanel.add(backBtn, BorderLayout.WEST);
+
         // Tombol Logout
         JButton logoutBtn = new JButton("Logout");
         logoutBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-
-        // Action listener untuk Logout
         logoutBtn.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
@@ -84,11 +94,10 @@ public class ListKamar {
                 HalamanLogin.main(null); // Membuka halaman login
             }
         });
+        topPanel.add(logoutBtn, BorderLayout.EAST);
 
-        // Menambahkan tombol Logout di bawah
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(logoutBtn, BorderLayout.WEST);
-        frame.add(bottomPanel, BorderLayout.SOUTH);
+        // Tambahkan panel atas ke frame
+        frame.add(topPanel, BorderLayout.NORTH);
 
         // Atur frame agar terlihat di tengah layar
         frame.setLocationRelativeTo(null);
