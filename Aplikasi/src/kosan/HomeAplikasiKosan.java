@@ -58,7 +58,8 @@ public class HomeAplikasiKosan {
         sewaKamarBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Menu Sewa Kamar belum tersedia.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose(); // Menutup frame saat ini
+                SewaKamar.main(new String[]{"authenticated"}); // Membuka halaman SewaKamar
             }
         });
 
@@ -77,7 +78,7 @@ public class HomeAplikasiKosan {
         // Tombol Logout
         JButton logoutBtn = new JButton("Logout");
         logoutBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-        logoutBtn.setHorizontalAlignment(SwingConstants.LEFT);
+        logoutBtn.setHorizontalAlignment(SwingConstants.RIGHT);
 
         // Menambahkan action listener untuk tombol Logout
         logoutBtn.addActionListener(new ActionListener() {
@@ -91,12 +92,12 @@ public class HomeAplikasiKosan {
             }
         });
 
-        // Panel untuk Logout di bawah kiri
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(logoutBtn, BorderLayout.WEST);
+        // Panel atas untuk tombol Logout
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(logoutBtn, BorderLayout.EAST);
 
-        // Tambahkan panel bawah ke frame
-        frame.add(bottomPanel, BorderLayout.SOUTH);
+        // Tambahkan panel atas ke frame
+        frame.add(topPanel, BorderLayout.NORTH);
 
         // Atur frame agar terlihat di tengah layar
         frame.setLocationRelativeTo(null);

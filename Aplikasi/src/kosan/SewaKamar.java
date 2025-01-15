@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 
-public class SewaKamar {    
+public class SewaKamar {
     public static Connection con;
     public static Statement stm;
 
@@ -18,12 +18,33 @@ public class SewaKamar {
             HalamanLogin.main(null); // Kembali ke halaman login
             return; // Keluar dari method ini
         }
-        
+
         JFrame frame = new JFrame("Sewa Kamar");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
 
+        // Panel atas untuk tombol navigasi
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Use FlowLayout for better control
+        JButton btnKembali = new JButton("Kembali");
+        btnKembali.addActionListener((ActionEvent e) -> {
+            frame.dispose();
+            HomeAplikasiKosan.main(new String[]{"authenticated"}); // Menampilkan halaman utama
+        });
+        JButton btnLogout = new JButton("Logout");
+        btnLogout.addActionListener((ActionEvent e) -> {
+            int confirm = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                frame.dispose();
+                HalamanLogin.main(null); // Menampilkan halaman login
+            }
+        });
+
+        topPanel.add(btnKembali);
+        topPanel.add(btnLogout);
+        frame.add(topPanel, BorderLayout.NORTH); // Add topPanel to the top of the frame
+
+        // Panel untuk form
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -126,25 +147,42 @@ public class SewaKamar {
             String kamar = (String) kamarComboBox.getSelectedItem();
             String lama_sewa = lamaSewaField.getText();
             String satuan_sewa = (String) satuanSewaComboBox.getSelectedItem();
-            
+
             if (idPenghuni == null || kamar == null || lama_sewa.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Harap lengkapi semua data!", "Peringatan", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            
+
             try {
                 con = DriverManager.getConnection("jdbc:mysql://localhost/sikosan_db", "root", "");
                 stm = con.createStatement();
-                
-                String IdKamar = kamar.split(" --- ")[0].replace("No. ", "");
-                
-                String query = "INSERT INTO reservasi (IdPenghuni, IdKamar, lama_sewa, satuan_sewa) VALUES ('" + idPenghuni + "', '" + IdKamar + "', '" + lama_sewa + "', '" + satuan_sewa + "')";
-                stm.executeUpdate(query);
-                
-                JOptionPane.showMessageDialog(frame, "Sewa kamar berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                
-                stm.close();
+
+                String query = "INSERT INTO reservasi (IdPenghuni, IdKamar, lama_sewa, satuan_sewa) VALUES (?, ?, ?, ?)";
+                PreparedStatement pstmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, idPenghuni);
+                pstmt.setString(2, kamar);
+                pstmt.setString(3, lama_sewa);
+                pstmt.setString(4, satuan_sewa);
+
+                pstmt.executeUpdate();
+                ResultSet rs = pstmt.getGeneratedKeys();
+                String idReservasi = null;
+                if (rs.next()) {
+                    idReservasi = rs.getString(1); // Mendapatkan ID Reservasi yang baru dibuat
+                }
+                rs.close();
+                pstmt.close();
                 con.close();
+
+                if (idReservasi != null) {
+                    JOptionPane.showMessageDialog(frame, "Sewa kamar berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose(); // Menutup frame SewaKamar
+
+                    // Pindah ke halaman Pembayaran
+                    Pembayaran.main(new String[]{idReservasi});
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Gagal mendapatkan ID Reservasi.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(frame, "Gagal menyimpan data: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
