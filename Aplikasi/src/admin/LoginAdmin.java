@@ -1,6 +1,5 @@
 package admin;
 
-import admin.HomeAdmin;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -57,7 +56,7 @@ public class LoginAdmin {
         gbc.gridx = 2;
         panel.add(showHideButton, gbc);
 
-        // Menambahkan action listener untuk tombol "Tampilan/Sembunyikan Password"
+        // Menambahkan action listener untuk tombol "Tampilkan/Sembunyikan Password"
         showHideButton.addActionListener(new ActionListener() {
             private boolean isPasswordVisible = false;
 
@@ -80,6 +79,12 @@ public class LoginAdmin {
         gbc.gridy = 2;
         panel.add(loginButton, gbc);
 
+        // Tombol untuk register
+        JButton registerButton = new JButton("Register");
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        panel.add(registerButton, gbc);
+
         // Pada Action Listener tombol login
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -91,7 +96,7 @@ public class LoginAdmin {
                     if (authenticateUser(email, password)) {
                         JOptionPane.showMessageDialog(frame, "Login Berhasil!", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
 
-                        // Pindah ke halaman HomeAplikasiKosan dengan parameter login berhasil
+                        // Pindah ke halaman HomeAdmin dengan parameter login berhasil
                         frame.dispose(); // Tutup halaman login
                         HomeAdmin.main(new String[]{"authenticated"}); // Kirim flag "authenticated"
                     } else {
@@ -103,6 +108,14 @@ public class LoginAdmin {
             }
         });
 
+        // Action Listener untuk tombol Register
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Tutup halaman login
+                inputPegawai.main(null); // Buka halaman register InputPegawai
+            }
+        });
 
         // Menambah panel pada tengah Frame
         frame.add(panel, BorderLayout.CENTER);
@@ -125,7 +138,7 @@ public class LoginAdmin {
             // Membuat koneksi ke database
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
 
-            // Query untuk memeriksa email dan password di tabel penghuni
+            // Query untuk memeriksa email dan password di tabel pegawai
             String query = "SELECT * FROM pegawai WHERE email = ? AND password = ?";
             statement = connection.prepareStatement(query);
             statement.setString(1, email);

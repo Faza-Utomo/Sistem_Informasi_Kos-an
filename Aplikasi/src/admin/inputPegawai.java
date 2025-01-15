@@ -72,7 +72,7 @@ public class inputPegawai extends JFrame {
                     }
                     
                     dispose(); // Menutup frame input
-                    Pegawai.main(null); // Membuka halaman Kamar
+                    LoginAdmin.main(null); // Membuka halaman Kamar
                     
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(null, "ID Pegawai harus berupa angka!", "Kesalahan", JOptionPane.ERROR_MESSAGE);
@@ -105,17 +105,7 @@ public class inputPegawai extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] args) {
-        
-        boolean isAuthenticated = args.length > 0 && args[0].equals("authenticated");
-
-        // Jika belum login, kembali ke halaman login
-        if (!isAuthenticated) {
-            JOptionPane.showMessageDialog(null, "Silakan login terlebih dahulu.", "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
-            LoginAdmin.main(null); // Kembali ke halaman login
-            return; // Keluar dari method ini
-        }
-        
+    public static void main(String[] args) {        
         SwingUtilities.invokeLater(() -> {
             inputPegawai frame = new inputPegawai(null); // Tidak ada parent frame di main
             frame.setVisible(true);
