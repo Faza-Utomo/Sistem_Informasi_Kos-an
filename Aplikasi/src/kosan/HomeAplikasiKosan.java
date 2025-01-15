@@ -23,19 +23,20 @@ public class HomeAplikasiKosan {
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
 
+        // Label judul
+        JLabel titleLabel = new JLabel("Selamat Datang di Aplikasi Kosan");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24)); // Increased font size
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setForeground(new Color(0, 102, 204)); // Optional: change the text color for emphasis
+
+        // Tambahkan label ke atas frame (sebelum panel logout)
+        frame.add(titleLabel, BorderLayout.NORTH);
+
         // Panel untuk konten utama
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-
-        // Label judul
-        JLabel titleLabel = new JLabel("Selamat Datang di Aplikasi Kosan");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        // Tambahkan label ke atas frame
-        frame.add(titleLabel, BorderLayout.NORTH);
 
         // Tombol Lihat Kamar
         JButton lihatKamarBtn = new JButton("List Kamar");

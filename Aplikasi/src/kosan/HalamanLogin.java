@@ -79,6 +79,12 @@ public class HalamanLogin {
         gbc.gridy = 2;
         panel.add(loginButton, gbc);
 
+        // Tombol untuk register
+        JButton registerButton = new JButton("Register");
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        panel.add(registerButton, gbc);
+
         // Pada Action Listener tombol login
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -102,6 +108,15 @@ public class HalamanLogin {
             }
         });
 
+        // Action Listener untuk tombol Register
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Pindah ke halaman RegisterAkun
+                frame.dispose(); // Menutup halaman login
+                RegisterAkun.main(null); // Membuka halaman RegisterAkun
+            }
+        });
 
         // Menambah panel pada tengah Frame
         frame.add(panel, BorderLayout.CENTER);
