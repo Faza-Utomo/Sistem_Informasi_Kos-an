@@ -45,6 +45,7 @@ public class RegisterAkun extends JFrame{
         // Menambahkan label dan text field untuk input data
         JLabel lblIdPenghuni = new JLabel("ID Penghuni:");
         JTextField txtIdPenghuni = new JTextField();
+        txtIdPenghuni.setEditable(false);
         JLabel lblNama = new JLabel("Nama:");
         JTextField txtNama = new JTextField();
         JLabel lblNoHp = new JLabel("No. Handphone:");
@@ -60,7 +61,7 @@ public class RegisterAkun extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Validasi input sebelum menyimpan
-                if (txtIdPenghuni.getText().isEmpty() || txtNama.getText().isEmpty() ||
+                if (txtNama.getText().isEmpty() ||
                         txtNoHp.getText().isEmpty() || txtEmail.getText().isEmpty() ||
                         txtPassword.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
@@ -68,19 +69,17 @@ public class RegisterAkun extends JFrame{
                 }
                 
                 try {
-                    int idPegawai = Integer.parseInt(txtIdPenghuni.getText());
                     
                     String url = "jdbc:mysql://localhost/sikosan_db";
                     String user = "root";
                     String pass = "";
                     try (Connection con = DriverManager.getConnection(url, user, pass)) {
-                        String query = "INSERT INTO penghuni (idpenghuni, nama, noHp, email, password) VALUES (?, ?, ?, ?, ?)";
+                        String query = "INSERT INTO penghuni (nama, noHp, email, password) VALUES (?, ?, ?, ?)";
                         try (PreparedStatement pst = con.prepareStatement(query)) {
-                            pst.setInt(1, idPegawai);
-                            pst.setString(2, txtNama.getText());
-                            pst.setString(3, txtNoHp.getText());
-                            pst.setString(4, txtEmail.getText());
-                            pst.setString(5, txtPassword.getText());
+                            pst.setString(1, txtNama.getText());
+                            pst.setString(2, txtNoHp.getText());
+                            pst.setString(3, txtEmail.getText());
+                            pst.setString(4, txtPassword.getText());
                             pst.executeUpdate();
                             
                             JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
@@ -89,9 +88,6 @@ public class RegisterAkun extends JFrame{
                     
                     dispose(); // Menutup frame input
                     HalamanLogin.main(null); // Membuka halaman Kamar
-                    
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "ID Penghuni harus berupa angka!", "Kesalahan", JOptionPane.ERROR_MESSAGE);
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(null, "Gagal menyimpan data: " + ex.getMessage(), "Kesalahan", JOptionPane.ERROR_MESSAGE);
                 }

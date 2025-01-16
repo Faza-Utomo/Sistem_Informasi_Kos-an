@@ -25,9 +25,12 @@ public class inputKamar extends JFrame {
         formPanel.setLayout(new GridLayout(6, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 10, 50));
 
-        // Menambahkan label dan text field untuk input data
+        // TextField untuk ID Kamar (read-only)
         JLabel lblIdKamar = new JLabel("ID Kamar:");
         JTextField txtIdKamar = new JTextField();
+        txtIdKamar.setEditable(false); // Tidak dapat diisi
+
+        // Menambahkan label dan text field untuk input data
         JLabel lblNoKamar = new JLabel("No. Kamar:");
         JTextField txtNoKamar = new JTextField();
         JLabel lblHarga = new JLabel("Harga:");
@@ -41,39 +44,36 @@ public class inputKamar extends JFrame {
         JButton btnSimpan = new JButton("Simpan");
         btnSimpan.addActionListener((ActionEvent e) -> {
             // Validasi input sebelum menyimpan
-            if (txtIdKamar.getText().isEmpty() || txtNoKamar.getText().isEmpty() ||
-                    txtHarga.getText().isEmpty() || txtJenisKamar.getText().isEmpty() ||
-                    txtKetersediaan.getText().isEmpty()) {
+            if (txtNoKamar.getText().isEmpty() || txtHarga.getText().isEmpty() ||
+                    txtJenisKamar.getText().isEmpty() || txtKetersediaan.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            
+
             try {
-                int idKamar = Integer.parseInt(txtIdKamar.getText());
                 int harga = Integer.parseInt(txtHarga.getText());
-                
+
                 String url = "jdbc:mysql://localhost/sikosan_db";
                 String user = "root";
                 String pass = "";
                 try (Connection con = DriverManager.getConnection(url, user, pass)) {
-                    String query = "INSERT INTO kamar (idKamar, noKamar, harga, jenisKamar, ketersediaan) VALUES (?, ?, ?, ?, ?)";
+                    String query = "INSERT INTO kamar (noKamar, harga, jenisKamar, ketersediaan) VALUES (?, ?, ?, ?)";
                     try (PreparedStatement pst = con.prepareStatement(query)) {
-                        pst.setInt(1, idKamar);
-                        pst.setString(2, txtNoKamar.getText());
-                        pst.setInt(3, harga);
-                        pst.setString(4, txtJenisKamar.getText());
-                        pst.setString(5, txtKetersediaan.getText());
+                        pst.setString(1, txtNoKamar.getText());
+                        pst.setInt(2, harga);
+                        pst.setString(3, txtJenisKamar.getText());
+                        pst.setString(4, txtKetersediaan.getText());
                         pst.executeUpdate();
-                        
+
                         JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
                     }
                 }
-                
+
                 dispose(); // Menutup frame input
-                Kamar.main(null); // Membuka halaman Kamar
-                
+                Kamar.main(new String[]{"authenticated"}); // Membuka halaman Kamar
+
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "ID Kamar dan Harga harus berupa angka!", "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Harga harus berupa angka!", "Kesalahan", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Gagal menyimpan data: " + ex.getMessage(), "Kesalahan", JOptionPane.ERROR_MESSAGE);
             }
@@ -103,7 +103,7 @@ public class inputKamar extends JFrame {
     }
 
     public static void main(String[] args) {
-        
+
         boolean isAuthenticated = args.length > 0 && args[0].equals("authenticated");
 
         // Jika belum login, kembali ke halaman login
@@ -112,7 +112,7 @@ public class inputKamar extends JFrame {
             LoginAdmin.main(null); // Kembali ke halaman login
             return; // Keluar dari method ini
         }
-        
+
         SwingUtilities.invokeLater(() -> {
             inputKamar frame = new inputKamar(null); // Tidak ada parent frame di main
             frame.setVisible(true);

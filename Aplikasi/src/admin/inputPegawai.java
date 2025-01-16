@@ -3,13 +3,12 @@ package admin;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class inputPegawai extends JFrame {
     public inputPegawai(JFrame parentFrame) {
 
-        // Konfigurasi frame untuk halaman input data kamar
+        // Konfigurasi frame untuk halaman input data pegawai
         setTitle("Form Input Data Pegawai");
         setSize(800, 600); // Ukuran frame 800x600
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -26,9 +25,12 @@ public class inputPegawai extends JFrame {
         formPanel.setLayout(new GridLayout(6, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 10, 50));
 
-        // Menambahkan label dan text field untuk input data
+        // TextField untuk ID Pegawai (read-only but user can input if needed)
         JLabel lblIdPegawai = new JLabel("ID Pegawai:");
         JTextField txtIdPegawai = new JTextField();
+        txtIdPegawai.setEditable(false); // Tetap dapat diisi meskipun ada auto increment
+
+        // Menambahkan label dan text field untuk input data
         JLabel lblNama = new JLabel("Nama:");
         JTextField txtNama = new JTextField();
         JLabel lblNoHp = new JLabel("No. Handphone:");
@@ -40,45 +42,36 @@ public class inputPegawai extends JFrame {
 
         // Tombol Simpan
         JButton btnSimpan = new JButton("Simpan");
-        btnSimpan.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Validasi input sebelum menyimpan
-                if (txtIdPegawai.getText().isEmpty() || txtNama.getText().isEmpty() ||
-                        txtNoHp.getText().isEmpty() || txtEmail.getText().isEmpty() ||
-                        txtPassword.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                
-                try {
-                    int idPegawai = Integer.parseInt(txtIdPegawai.getText());
-                    
-                    String url = "jdbc:mysql://localhost/sikosan_db";
-                    String user = "root";
-                    String pass = "";
-                    try (Connection con = DriverManager.getConnection(url, user, pass)) {
-                        String query = "INSERT INTO pegawai (idpegawai, nama, noHp, email, password) VALUES (?, ?, ?, ?, ?)";
-                        try (PreparedStatement pst = con.prepareStatement(query)) {
-                            pst.setInt(1, idPegawai);
-                            pst.setString(2, txtNama.getText());
-                            pst.setString(3, txtNoHp.getText());
-                            pst.setString(4, txtEmail.getText());
-                            pst.setString(5, txtPassword.getText());
-                            pst.executeUpdate();
-                            
-                            JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
-                        }
+        btnSimpan.addActionListener((ActionEvent e) -> {
+            // Validasi input sebelum menyimpan
+            if (txtNama.getText().isEmpty() ||
+                    txtNoHp.getText().isEmpty() || txtEmail.getText().isEmpty() || txtPassword.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            try {
+                String url = "jdbc:mysql://localhost/sikosan_db";
+                String user = "root";
+                String pass = "";
+                try (Connection con = DriverManager.getConnection(url, user, pass)) {
+                    String query = "INSERT INTO pegawai (nama, noHp, email, password) VALUES (?, ?, ?, ?)";
+                    try (PreparedStatement pst = con.prepareStatement(query)) {
+                        pst.setString(1, txtNama.getText());
+                        pst.setString(2, txtNoHp.getText());
+                        pst.setString(3, txtEmail.getText());
+                        pst.setString(4, txtPassword.getText());
+                        pst.executeUpdate();
+
+                        JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
                     }
-                    
-                    dispose(); // Menutup frame input
-                    LoginAdmin.main(null); // Membuka halaman Kamar
-                    
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "ID Pegawai harus berupa angka!", "Kesalahan", JOptionPane.ERROR_MESSAGE);
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, "Gagal menyimpan data: " + ex.getMessage(), "Kesalahan", JOptionPane.ERROR_MESSAGE);
                 }
+
+                dispose(); // Menutup frame input
+                LoginAdmin.main(null); // Membuka halaman LoginAdmin
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Gagal menyimpan data: " + ex.getMessage(), "Kesalahan", JOptionPane.ERROR_MESSAGE);
             }
         });
 
